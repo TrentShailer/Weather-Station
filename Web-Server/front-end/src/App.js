@@ -31,7 +31,7 @@ class App extends React.Component {
 				pressure: 0,
 				weather: "",
 			},
-			updated: "2021-04-15 5:50pm NZT",
+			updated: "",
 			openGraph: false,
 			theme: {
 				background: "#424242",
@@ -63,64 +63,9 @@ class App extends React.Component {
 					},
 				},
 			},
-			data: [
-				{
-					id: "data",
-					color: "",
-					data: [
-						{
-							x: "2021-04-03",
-							y: 160,
-						},
-						{
-							x: "2021-04-04",
-							y: 116,
-						},
-						{
-							x: "2021-04-05",
-							y: 300,
-						},
-						{
-							x: "2021-04-06",
-							y: 143,
-						},
-						{
-							x: "2021-04-07",
-							y: 207,
-						},
-						{
-							x: "2021-04-08",
-							y: 121,
-						},
-						{
-							x: "2021-04-09",
-							y: 84,
-						},
-						{
-							x: "2021-04-10",
-							y: 179,
-						},
-						{
-							x: "2021-04-11",
-							y: 161,
-						},
-						{
-							x: "2021-04-12",
-							y: 233,
-						},
-						{
-							x: "2021-04-13",
-							y: 6,
-						},
-						{
-							x: "2021-04-14",
-							y: 242,
-						},
-					],
-				},
-			],
-			dataValue: "Temperature",
-			dataUnit: "°C",
+			data: [],
+			dataValue: "",
+			dataUnit: "",
 		};
 		this.GetData = this.GetData.bind(this);
 		this.CloseGraph = this.CloseGraph.bind(this);
@@ -128,7 +73,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		setInterval(this.GetData(), 100);
+		setInterval(this.GetData(), 1000);
 	}
 
 	GetData = () => {
