@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Grid, Dialog, DialogContent, DialogTitle, Tooltip } from "@material-ui/core";
+import { Container, Grid, Dialog, DialogContent, DialogTitle, IconButton } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import StatCard from "./StatCard.js";
 import Footer from "./Footer.js";
@@ -14,7 +14,9 @@ import {
 	faLightbulb,
 	faWind,
 	faTint,
+	faRedoAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ResponsiveLine } from "@nivo/line";
 
@@ -72,11 +74,7 @@ class App extends React.Component {
 		this.OpenGraph = this.OpenGraph.bind(this);
 	}
 
-	componentDidMount() {
-		setInterval(this.GetData(), 1000);
-	}
-
-	GetData = () => {
+	GetData() {
 		axios
 			.post("/GetData")
 			.then((response) => {
@@ -85,7 +83,12 @@ class App extends React.Component {
 			.catch((error) => {
 				this.props.enqueueSnackbar("Failed to fetch data.", { variant: "error" });
 			});
-	};
+	}
+
+	componentDidMount() {
+		this.GetData();
+		setInterval(this.GetData, 60000);
+	}
 
 	CloseGraph = () => {
 		this.setState({ openGraph: false });
@@ -159,6 +162,9 @@ class App extends React.Component {
 						/>
 					</DialogContent>
 				</Dialog>
+				<IconButton onClick={this.GetData} style={{ position: "absolute", marginLeft: 20 }}>
+					<FontAwesomeIcon color="#2196f3" icon={faRedoAlt} />
+				</IconButton>
 				<Container style={{ marginTop: 50 }}>
 					<Grid container style={{ flexGrow: 1 }} spacing={8}>
 						<Grid item xs={12}>
