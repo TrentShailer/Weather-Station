@@ -27,7 +27,7 @@ class App extends React.Component {
 			values: {
 				temperature: 0,
 				humidity: 0,
-				windSpeed: 0,
+				wind: 0,
 				uv: 0,
 				light: 0,
 				pressure: 0,
@@ -78,7 +78,7 @@ class App extends React.Component {
 		axios
 			.post("/GetData")
 			.then((response) => {
-				this.setState({ values: response.data.values, updated: response.data.updated });
+				this.setState({ values: response.data.data, updated: response.data.date });
 			})
 			.catch((error) => {
 				this.props.enqueueSnackbar("Failed to fetch data.", { variant: "error" });
@@ -205,7 +205,7 @@ class App extends React.Component {
 										OpenGraph={this.OpenGraph}
 										icon={faWind}
 										title="Wind Speed"
-										value={this.state.values.windSpeed}
+										value={this.state.values.wind}
 										unit=" km/h"
 									/>
 								</Grid>
