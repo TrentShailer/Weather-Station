@@ -15,7 +15,6 @@ var urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
 // Initialise libraries
 var express = require("express");
-const { stringify } = require("querystring");
 var app = express();
 
 var httpServer = http.createServer(app);
@@ -31,15 +30,26 @@ app.get("/", (req, res) => {
 
 app.post("/GetData", (req, res) => {
 	var now = new Date();
-	var data = fs.readFileSync(
-		path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json")
-	);
+	try {
+		var data = fs.readFileSync(
+			path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json")
+		);
+	} catch (err) {
+		var data = fs.readFileSync(
+			path.join(
+				__dirname,
+				"/data",
+				dateFormat(now.setDate(now.getDate() - 1), "yyyy-mm-dd"),
+				"CurrentData.json"
+			)
+		);
+	}
 	var obj = JSON.parse(data);
 	console.log(obj);
 	return res.send(obj);
 });
 
-function GetWeather(temperature, wind, rain, light, uv, now) {
+function GetWeather(wind, rain, light, uv, now) {
 	return "";
 }
 
@@ -54,7 +64,7 @@ app.post("/SaveData", urlEncodedParser, (req, res) => {
 		var pressure = req.body.pressure;
 		var rain = req.body.rain;
 
-		var weather = GetWeather(temperature, wind, rain, light, uv, now);
+		var weather = GetWeather(wind, rain, light, uv, now);
 		if (!fs.existsSync(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"))))
 			fs.mkdirSync(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
 		fs.writeFileSync(
