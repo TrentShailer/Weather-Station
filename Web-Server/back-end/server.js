@@ -214,8 +214,8 @@ app.post("/GetTemperature", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -259,8 +259,8 @@ app.post("/GetHumidity", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -304,8 +304,8 @@ app.post("/GetWind%20Speed", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -349,8 +349,8 @@ app.post("/GetLight%20Intensity", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -394,8 +394,8 @@ app.post("/GetUV%20Index", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -438,8 +438,8 @@ app.post("/GetAir%20Pressure", async (req, res) => {
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
 		{ id: "Average", data: [] },
-		{ id: "Peak", data: [] },
-		{ id: "Trough", data: [] },
+		{ id: "Maximum", data: [] },
+		{ id: "Minimum", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;

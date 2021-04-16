@@ -15,6 +15,7 @@ import {
 	faWind,
 	faTint,
 	faRedoAlt,
+	faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -119,7 +120,15 @@ class App extends React.Component {
 			<div>
 				<CssBaseline />
 				<Dialog maxWidth="xl" fullScreen open={this.state.openGraph} onClose={this.CloseGraph}>
-					<DialogTitle>{this.state.dataValue}</DialogTitle>
+					<DialogTitle>
+						{this.state.dataValue}
+						<IconButton
+							onClick={this.CloseGraph}
+							style={{ width: 50, height: 50, position: "absolute", right: 0, marginRight: 20 }}
+						>
+							<FontAwesomeIcon icon={faTimes} />
+						</IconButton>
+					</DialogTitle>
 					<DialogContent>
 						<Line
 							width={window.innerWidth * 0.9}
@@ -131,7 +140,7 @@ class App extends React.Component {
 							xScale={{ type: "point" }}
 							yScale={{
 								type: "linear",
-								min: 0,
+								min: "auto",
 								max: "auto",
 								stacked: false,
 								reverse: false,
