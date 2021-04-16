@@ -213,9 +213,9 @@ app.post("/GetTemperature", async (req, res) => {
 	var ittrDate = new Date();
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
 	var data = [
-		{ id: "Average", color: "hsl(239, 70%, 50%)", data: [] },
-		{ id: "Peak", color: "hsl(131, 70%, 50%)", data: [] },
-		{ id: "Trough", color: "hsl(336, 70%, 50%)", data: [] },
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
 	];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
@@ -247,6 +247,230 @@ app.post("/GetTemperature", async (req, res) => {
 		data[2].data.push({
 			x: dateFormat(ittrDate, "yyyy-mm-dd"),
 			y: +Number(objData.trough.temperature).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+
+app.post("/GetHumidity", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.humidity).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.humidity).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.humidity).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+
+app.post("/GetWind%20Speed", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.wind).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.wind).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.wind).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+
+app.post("/GetLight%20Intensity", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.light).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.light).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.light).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+
+app.post("/GetUV%20Index", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.uv).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.uv).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.uv).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+app.post("/GetAir%20Pressure", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", data: [] },
+		{ id: "Peak", data: [] },
+		{ id: "Trough", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.pressure).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.pressure).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.pressure).toFixed(1),
 		});
 		ittrDate.setDate(ittrDate.getDate() + 1);
 	}

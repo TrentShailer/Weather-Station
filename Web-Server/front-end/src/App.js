@@ -133,7 +133,7 @@ class App extends React.Component {
 								type: "linear",
 								min: 0,
 								max: "auto",
-								stacked: true,
+								stacked: false,
 								reverse: false,
 							}}
 							yFormat={(value) => `${Number(value)}${this.state.dataUnit}`}
