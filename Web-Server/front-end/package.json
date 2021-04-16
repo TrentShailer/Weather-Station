@@ -20,6 +20,9 @@
 		"react-scripts": "4.0.3",
 		"web-vitals": "^1.0.1"
 	},
+	"resolutions": {
+		"react-spring": "9.0.1"
+	},
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build && Xcopy /E /I /Y build ..\\back-end\\build",

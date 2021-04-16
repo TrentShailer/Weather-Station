@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { ResponsiveLine } from "@nivo/line";
+import { Line } from "@nivo/line";
 
 class App extends React.Component {
 	constructor(props) {
@@ -98,12 +98,16 @@ class App extends React.Component {
 		axios
 			.post(`/Get${dataValue}`)
 			.then((response) => {
-				this.setState({
-					unit: unit,
-					dataValue: dataValue,
-					data: response.data.data,
-					openGraph: true,
-				});
+				this.setState(
+					{
+						dataUnit: unit,
+						dataValue: dataValue,
+						data: response.data,
+					},
+					() => {
+						this.setState({ openGraph: true });
+					}
+				);
 			})
 			.catch((error) => {
 				this.props.enqueueSnackbar("Failed to fetch data.", { variant: "error" });
@@ -117,16 +121,19 @@ class App extends React.Component {
 				<Dialog maxWidth="xl" fullScreen open={this.state.openGraph} onClose={this.CloseGraph}>
 					<DialogTitle>{this.state.dataValue}</DialogTitle>
 					<DialogContent>
-						<ResponsiveLine
+						<Line
+							width={window.innerWidth * 0.9}
+							height={window.innerHeight * 0.9}
+							animate={true}
 							theme={this.state.theme}
 							data={this.state.data}
-							margin={{ top: 50, right: 60, bottom: 100, left: 100 }}
+							margin={{ top: 50, right: 100, bottom: 100, left: 100 }}
 							xScale={{ type: "point" }}
 							yScale={{
 								type: "linear",
 								min: 0,
 								max: "auto",
-								stacked: false,
+								stacked: true,
 								reverse: false,
 							}}
 							yFormat={(value) => `${Number(value)}${this.state.dataUnit}`}
@@ -157,8 +164,35 @@ class App extends React.Component {
 							pointColor={{ from: "color", modifiers: [] }}
 							pointBorderColor={{ from: "serieColor", modifiers: [] }}
 							pointLabelYOffset={-12}
-							enableArea={true}
+							enableArea={false}
+							enableSlices="x"
 							useMesh={true}
+							legends={[
+								{
+									anchor: "bottom-right",
+									direction: "column",
+									justify: false,
+									translateX: 100,
+									translateY: 0,
+									itemsSpacing: 0,
+									itemDirection: "left-to-right",
+									itemWidth: 80,
+									itemHeight: 20,
+									itemOpacity: 0.75,
+									symbolSize: 12,
+									symbolShape: "circle",
+									symbolBorderColor: "rgba(0, 0, 0, .5)",
+									effects: [
+										{
+											on: "hover",
+											style: {
+												itemBackground: "rgba(0, 0, 0, .03)",
+												itemOpacity: 1,
+											},
+										},
+									],
+								},
+							]}
 						/>
 					</DialogContent>
 				</Dialog>

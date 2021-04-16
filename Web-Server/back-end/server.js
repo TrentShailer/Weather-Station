@@ -208,6 +208,51 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 	}
 });
 
+app.post("/GetTemperature", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [
+		{ id: "Average", color: "hsl(239, 70%, 50%)", data: [] },
+		{ id: "Peak", color: "hsl(131, 70%, 50%)", data: [] },
+		{ id: "Trough", color: "hsl(336, 70%, 50%)", data: [] },
+	];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.average.temperature).toFixed(1),
+		});
+		data[1].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.peak.temperature).toFixed(1),
+		});
+		data[2].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.trough.temperature).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
+});
+
 app.get("*", (req, res) => {
 	res.redirect("/");
 });
