@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 var fs = require("fs");
+const fsA = fs.promises;
 var path = require("path");
 var dateFormat = require("dateformat");
 // var https = require("https");
@@ -28,14 +29,14 @@ app.get("/", (req, res) => {
 	res.sendFile("index.html");
 });
 
-app.post("/GetData", (req, res) => {
+app.post("/GetData", async (req, res) => {
 	var now = new Date();
 	try {
-		var data = fs.readFileSync(
+		var data = await fsA.readFile(
 			path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json")
 		);
 	} catch (err) {
-		var data = fs.readFileSync(
+		var data = await fsA.readFile(
 			path.join(
 				__dirname,
 				"/data",
@@ -45,32 +46,50 @@ app.post("/GetData", (req, res) => {
 		);
 	}
 	var obj = JSON.parse(data);
-	console.log(obj);
 	return res.send(obj);
 });
 
-function GetWeather(wind, rain, light, uv, now) {
+function GetWeather(rain, light, uv, now) {
+	// Get if its raining (how heavily)
+	// Get the light level compared to average for time for cloudy
+	// Options (low to high priority)
+	// This is all given that I get get roughly how rainy it is
+	// Sunny
+	// Partially Cloudy
+	// Cloudy
+	//
+	// Light showers
+	// Rain
+	// Heavy rain
+
 	return "";
 }
 
-app.post("/SaveData", urlEncodedParser, (req, res) => {
+app.post("/SaveData", urlEncodedParser, async (req, res) => {
 	if (req.body.secret === process.env.SECRET) {
 		var now = new Date();
-		var temperature = req.body.temperature;
-		var humidity = req.body.humidity;
-		var wind = req.body.wind;
-		var light = req.body.light;
-		var uv = req.body.uv;
-		var pressure = req.body.pressure;
-		var rain = req.body.rain;
+		var temperature = Number(req.body.temperature);
+		var humidity = Number(req.body.humidity);
+		var wind = Number(req.body.wind);
+		var light = Number(req.body.light);
+		var uv = Number(req.body.uv);
+		var pressure = Number(req.body.pressure);
+		var rain = Number(req.body.rain);
 
-		var weather = GetWeather(wind, rain, light, uv, now);
-		if (!fs.existsSync(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"))))
-			fs.mkdirSync(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
-		fs.writeFileSync(
+		var weather = GetWeather(rain, light, uv, now);
+
+		var exists = true;
+		try {
+			await fsA.stat(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
+		} catch (err) {
+			exists = false;
+		}
+
+		if (!exists) await fsA.mkdir(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
+		await fsA.writeFile(
 			path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json"),
 			JSON.stringify({
-				date: dateFormat(now, "yyyy-mm-dd h:MM:ss TT"),
+				date: dateFormat(now, "yyyy-mm-dd h:MM TT"),
 				data: {
 					temperature: temperature,
 					humidity: humidity,
@@ -82,15 +101,15 @@ app.post("/SaveData", urlEncodedParser, (req, res) => {
 				},
 			})
 		);
-		fs.writeFileSync(
+		await fsA.writeFile(
 			path.join(
 				__dirname,
 				"/data",
 				dateFormat(now, "yyyy-mm-dd"),
-				`${dateFormat(now, "h-MM-ss TT")}.json`
+				`${dateFormat(now, "h-MM TT")}.json`
 			),
 			JSON.stringify({
-				date: dateFormat(now, "yyyy-mm-dd h:MM:ss TT"),
+				date: dateFormat(now, "yyyy-mm-dd h:MM TT"),
 				data: {
 					temperature: temperature,
 					humidity: humidity,
@@ -102,35 +121,87 @@ app.post("/SaveData", urlEncodedParser, (req, res) => {
 				},
 			})
 		);
-		// ImportantValues.json format:
-		/*
-		{
-			average: {
-				temperature: #,
-				humidity: #,
-				wind: #,
-				light: #,
-				uv: #,
-				pressure: #
-			},
-			peak: {
-				temperature: #,
-				humidity: #,
-				wind: #,
-				light: #,
-				uv: #,
-				pressure: #
-			},
-			trough: {
-				temperature: #,
-				humidity: #,
-				wind: #,
-				light: #,
-				uv: #,
-				pressure: #
-			}
+
+		var exists = true;
+
+		try {
+			await fsA.stat(
+				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json")
+			);
+		} catch (err) {
+			exists = false;
 		}
-		*/
+
+		if (exists) {
+			var importantData = await fsA.readFile(
+				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json")
+			);
+			var objData = JSON.parse(importantData);
+			// update peaks and troughs
+			if (objData.peak.temperature < temperature) objData.peak.temperature = temperature;
+			if (objData.peak.humidity < humidity) objData.peak.humidity = humidity;
+			if (objData.peak.wind < wind) objData.peak.wind = wind;
+			if (objData.peak.light < light) objData.peak.light = light;
+			if (objData.peak.uv < uv) objData.peak.uv = uv;
+			if (objData.peak.pressure < pressure) objData.peak.pressure = pressure;
+
+			if (objData.trough.temperature > temperature) objData.trough.temperature = temperature;
+			if (objData.trough.humidity > humidity) objData.trough.humidity = humidity;
+			if (objData.trough.wind > wind) objData.trough.wind = wind;
+			if (objData.trough.light > light) objData.trough.light = light;
+			if (objData.trough.uv > uv) objData.trough.uv = uv;
+			if (objData.trough.pressure > pressure) objData.trough.pressure = pressure;
+
+			objData.values++;
+
+			// Update average
+			objData.average.temperature =
+				objData.average.temperature + (temperature - objData.average.temperature) / objData.values;
+			objData.average.humidity =
+				objData.average.humidity + (humidity - objData.average.humidity) / objData.values;
+			objData.average.wind = objData.average.wind + (wind - objData.average.wind) / objData.values;
+			objData.average.light =
+				objData.average.light + (light - objData.average.light) / objData.values;
+			objData.average.uv = objData.average.uv + (uv - objData.average.uv) / objData.values;
+			objData.average.pressure =
+				objData.average.pressure + (pressure - objData.average.pressure) / objData.values;
+			await fsA.writeFile(
+				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json"),
+				JSON.stringify(objData)
+			);
+		} else {
+			await fsA.writeFile(
+				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json"),
+				JSON.stringify({
+					values: 1,
+					average: {
+						temperature: temperature,
+						humidity: humidity,
+						wind: wind,
+						light: light,
+						uv: uv,
+						pressure: pressure,
+					},
+					peak: {
+						temperature: temperature,
+						humidity: humidity,
+						wind: wind,
+						light: light,
+						uv: uv,
+						pressure: pressure,
+					},
+					trough: {
+						temperature: temperature,
+						humidity: humidity,
+						wind: wind,
+						light: light,
+						uv: uv,
+						pressure: pressure,
+					},
+				})
+			);
+		}
+
 		res.sendStatus(200);
 	} else {
 		res.sendStatus(403);

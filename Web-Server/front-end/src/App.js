@@ -87,7 +87,7 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.GetData();
-		setInterval(this.GetData, 60000);
+		setInterval(this.GetData, 180000);
 	}
 
 	CloseGraph = () => {
