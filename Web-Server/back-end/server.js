@@ -153,6 +153,7 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 			if (objData.trough.pressure > pressure) objData.trough.pressure = pressure;
 
 			objData.values++;
+			objData.extra.rain += rain;
 
 			// Update average
 			objData.average.temperature =
@@ -198,6 +199,9 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 						uv: uv,
 						pressure: pressure,
 					},
+					extra: {
+						rain: rain,
+					},
 				})
 			);
 		}
@@ -206,6 +210,39 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 	} else {
 		res.sendStatus(403);
 	}
+});
+
+app.post("/GetWeather", async (req, res) => {
+	var now = new Date();
+	var ittrDate = new Date();
+	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
+	var data = [{ id: "Hours of Rain", data: [] }];
+	for (var i = 0; i < 365; i++) {
+		var exists = true;
+		var dir = path.join(
+			__dirname,
+			"data",
+			dateFormat(ittrDate, "yyyy-mm-dd"),
+			"ImportantValues.json"
+		);
+		await fsA.stat(dir).catch((err) => {
+			exists = false;
+		});
+		if (!exists) {
+			ittrDate.setDate(ittrDate.getDate() + 1);
+			continue;
+		}
+
+		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		var text = await fsA.readFile(dir);
+		var objData = JSON.parse(text);
+		data[0].data.push({
+			x: dateFormat(ittrDate, "yyyy-mm-dd"),
+			y: +Number(objData.extra.rain / 60).toFixed(1),
+		});
+		ittrDate.setDate(ittrDate.getDate() + 1);
+	}
+	res.send(data);
 });
 
 app.post("/GetTemperature", async (req, res) => {

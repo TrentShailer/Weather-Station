@@ -44,15 +44,13 @@ class StatCard extends React.Component {
 					</Container>
 				</CardContent>
 				<CardActions>
-					{this.props.title !== "Weather" ? (
-						<IconButton
-							onClick={() => {
-								this.props.OpenGraph(this.props.unit, this.props.title);
-							}}
-						>
-							<TimelineIcon style={{ color: grey[400] }} />
-						</IconButton>
-					) : null}
+					<IconButton
+						onClick={() => {
+							this.props.OpenGraph(this.props.unit, this.props.title);
+						}}
+					>
+						<TimelineIcon style={{ color: grey[400] }} />
+					</IconButton>
 				</CardActions>
 			</Card>
 		);
