@@ -255,10 +255,10 @@ class App extends React.Component {
 								<Grid item>
 									<StatCard
 										OpenGraph={this.OpenGraph}
-										icon={faLightbulb}
-										title="Light Intensity"
-										value={this.state.values.light}
-										unit=" Lux"
+										icon={faCloudDownloadAlt}
+										title="Air Pressure"
+										value={this.state.values.pressure}
+										unit=" hPa"
 									/>
 								</Grid>
 								<Grid item>
@@ -268,19 +268,6 @@ class App extends React.Component {
 										title="UV Index"
 										value={this.state.values.uv}
 										unit=""
-									/>
-								</Grid>
-							</Grid>
-						</Grid>
-						<Grid item xs={12}>
-							<Grid container justify="center" spacing={10}>
-								<Grid item>
-									<StatCard
-										OpenGraph={this.OpenGraph}
-										icon={faCloudDownloadAlt}
-										title="Air Pressure"
-										value={this.state.values.pressure}
-										unit=" hPa"
 									/>
 								</Grid>
 							</Grid>

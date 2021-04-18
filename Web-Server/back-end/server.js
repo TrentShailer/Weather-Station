@@ -49,9 +49,8 @@ app.post("/GetData", async (req, res) => {
 	return res.send(obj);
 });
 
-function GetWeather(rain, light, uv, now) {
+function GetWeather(rain, pressure, uv, now) {
 	// Get if its raining (how heavily)
-	// Get the light level compared to average for time for cloudy
 	// Options (low to high priority)
 	// This is all given that I get get roughly how rainy it is
 	// Sunny
@@ -71,12 +70,11 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 		var temperature = Number(req.body.temperature);
 		var humidity = Number(req.body.humidity);
 		var wind = Number(req.body.wind);
-		var light = Number(req.body.light);
 		var uv = Number(req.body.uv);
 		var pressure = Number(req.body.pressure);
 		var rain = Number(req.body.rain);
 
-		var weather = GetWeather(rain, light, uv, now);
+		var weather = GetWeather(rain, pressure uv, now);
 
 		var exists = true;
 		try {
@@ -95,7 +93,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 					humidity: humidity,
 					weather: weather,
 					wind: wind,
-					light: light,
 					uv: uv,
 					pressure: pressure,
 				},
@@ -115,7 +112,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 					humidity: humidity,
 					weather: weather,
 					wind: wind,
-					light: light,
 					uv: uv,
 					pressure: pressure,
 				},
@@ -141,14 +137,12 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 			if (objData.peak.temperature < temperature) objData.peak.temperature = temperature;
 			if (objData.peak.humidity < humidity) objData.peak.humidity = humidity;
 			if (objData.peak.wind < wind) objData.peak.wind = wind;
-			if (objData.peak.light < light) objData.peak.light = light;
 			if (objData.peak.uv < uv) objData.peak.uv = uv;
 			if (objData.peak.pressure < pressure) objData.peak.pressure = pressure;
 
 			if (objData.trough.temperature > temperature) objData.trough.temperature = temperature;
 			if (objData.trough.humidity > humidity) objData.trough.humidity = humidity;
 			if (objData.trough.wind > wind) objData.trough.wind = wind;
-			if (objData.trough.light > light) objData.trough.light = light;
 			if (objData.trough.uv > uv) objData.trough.uv = uv;
 			if (objData.trough.pressure > pressure) objData.trough.pressure = pressure;
 
@@ -161,8 +155,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 			objData.average.humidity =
 				objData.average.humidity + (humidity - objData.average.humidity) / objData.values;
 			objData.average.wind = objData.average.wind + (wind - objData.average.wind) / objData.values;
-			objData.average.light =
-				objData.average.light + (light - objData.average.light) / objData.values;
 			objData.average.uv = objData.average.uv + (uv - objData.average.uv) / objData.values;
 			objData.average.pressure =
 				objData.average.pressure + (pressure - objData.average.pressure) / objData.values;
@@ -179,7 +171,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 						temperature: temperature,
 						humidity: humidity,
 						wind: wind,
-						light: light,
 						uv: uv,
 						pressure: pressure,
 					},
@@ -187,7 +178,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 						temperature: temperature,
 						humidity: humidity,
 						wind: wind,
-						light: light,
 						uv: uv,
 						pressure: pressure,
 					},
@@ -195,7 +185,6 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 						temperature: temperature,
 						humidity: humidity,
 						wind: wind,
-						light: light,
 						uv: uv,
 						pressure: pressure,
 					},
@@ -374,51 +363,6 @@ app.post("/GetWind%20Speed", async (req, res) => {
 		data[2].data.push({
 			x: dateFormat(ittrDate, "yyyy-mm-dd"),
 			y: +Number(objData.trough.wind).toFixed(1),
-		});
-		ittrDate.setDate(ittrDate.getDate() + 1);
-	}
-	res.send(data);
-});
-
-app.post("/GetLight%20Intensity", async (req, res) => {
-	var now = new Date();
-	var ittrDate = new Date();
-	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
-	var data = [
-		{ id: "Average", data: [] },
-		{ id: "Maximum", data: [] },
-		{ id: "Minimum", data: [] },
-	];
-	for (var i = 0; i < 365; i++) {
-		var exists = true;
-		var dir = path.join(
-			__dirname,
-			"data",
-			dateFormat(ittrDate, "yyyy-mm-dd"),
-			"ImportantValues.json"
-		);
-		await fsA.stat(dir).catch((err) => {
-			exists = false;
-		});
-		if (!exists) {
-			ittrDate.setDate(ittrDate.getDate() + 1);
-			continue;
-		}
-
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
-		var text = await fsA.readFile(dir);
-		var objData = JSON.parse(text);
-		data[0].data.push({
-			x: dateFormat(ittrDate, "yyyy-mm-dd"),
-			y: +Number(objData.average.light).toFixed(1),
-		});
-		data[1].data.push({
-			x: dateFormat(ittrDate, "yyyy-mm-dd"),
-			y: +Number(objData.peak.light).toFixed(1),
-		});
-		data[2].data.push({
-			x: dateFormat(ittrDate, "yyyy-mm-dd"),
-			y: +Number(objData.trough.light).toFixed(1),
 		});
 		ittrDate.setDate(ittrDate.getDate() + 1);
 	}
