@@ -1,5 +1,5 @@
 import smbus2
-import bme280
+import RPi.bme280 as bme280
 
 port = 1
 address = 0x76
