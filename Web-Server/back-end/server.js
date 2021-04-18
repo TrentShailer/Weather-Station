@@ -50,17 +50,8 @@ app.post("/GetData", async (req, res) => {
 });
 
 function GetWeather(rain, pressure, uv, now) {
-	// Get if its raining (how heavily)
-	// Options (low to high priority)
-	// This is all given that I get get roughly how rainy it is
-	// Sunny
-	// Partially Cloudy
-	// Cloudy
-	//
-	// Light showers
-	// Rain
-	// Heavy rain
-
+	// Low pressure indicates bad weather (cloud and rain)
+	// High pressure indicates clear skies
 	return "";
 }
 
