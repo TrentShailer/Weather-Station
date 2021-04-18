@@ -1,8 +1,9 @@
-from machine import Pin, I2C
+import board
+import busio
 import time
 import APDS9930
 
-i2c = I2C(sda=Pin(5), scl=Pin(4))
+i2c = busio.I2C(board.SCL, board.SDA)
 
 apds = APDS9930.APDS9930(i2c)
 

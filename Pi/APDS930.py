@@ -1,5 +1,6 @@
-from machine import I2C, Pin
 import time
+import board
+import busio
 
 APDS9930_I2C_ADDRESS = 0x39
 
