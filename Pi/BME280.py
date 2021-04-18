@@ -174,5 +174,6 @@ def main():
     print("Humidity : ", round(humidity, 2), "%")
 
 
-if __name__ == "__main__":
+while True:
     main()
+    time.sleep(5)
