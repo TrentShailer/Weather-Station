@@ -8,5 +8,4 @@ veml7700 = adafruit_veml7700.VEML7700(i2c)
 
 while True:
     print("Ambient light:", veml7700.light, " Lux")
-    time.sleep(0.1)
-su
+    time.sleep(0.5)
