@@ -5,6 +5,7 @@ import digitalio
 import busio
 import time
 import requests
+from Secret import secret
 
 i2c = busio.I2C(board.SCL, board.SDA)
 
@@ -20,5 +21,5 @@ while True:
     print("UV Index:", round(veml6075.uv_index, 1))
 
     requests.post("http://192.168.9.101:3002/SaveData",
-                  data={'temperature': round(bme280.temperature, 1), 'humidity': round(bme280.humidity, 1), 'pressure': round(bme280.pressure, 1), 'uv': round(veml6075.uv_index, 1), 'rain': 0, 'wind': 0})
+                  data={'secret': secret(), 'temperature': round(bme280.temperature, 1), 'humidity': round(bme280.humidity, 1), 'pressure': round(bme280.pressure, 1), 'uv': round(veml6075.uv_index, 1), 'rain': 0, 'wind': 0})
     time.sleep(5 * 60)

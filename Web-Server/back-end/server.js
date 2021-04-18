@@ -57,6 +57,7 @@ function GetWeather(rain, pressure, uv, now) {
 
 app.post("/SaveData", urlEncodedParser, async (req, res) => {
 	if (req.body.secret === process.env.SECRET) {
+		console.log("Received Request");
 		var now = new Date();
 		var temperature = Number(req.body.temperature);
 		var humidity = Number(req.body.humidity);
