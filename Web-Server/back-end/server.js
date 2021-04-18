@@ -74,7 +74,7 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 		var pressure = Number(req.body.pressure);
 		var rain = Number(req.body.rain);
 
-		var weather = GetWeather(rain, pressure uv, now);
+		var weather = GetWeather(rain, pressure, uv, now);
 
 		var exists = true;
 		try {
