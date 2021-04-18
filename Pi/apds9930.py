@@ -1,12 +1,5 @@
-import board
-import busio
-import time
-import APDS9930_lib
+from apds9930 import APDS9930
 
-i2c = busio.I2C(board.SCL, board.SDA)
+a = APDS9930(1)
 
-apds = APDS9930_lib.APDS9930(i2c)
-
-while True:
-    time.sleep_ms(500)
-    print(apds.getALS())
+print(a.ambient_light)
