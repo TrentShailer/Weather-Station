@@ -6,9 +6,9 @@ import adafruit_bme280
 
 # Create library object using our Bus I2C port
 i2c = busio.I2C(board.SCL, board.SDA)
-bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
-#or with other sensor address
-#bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, address=0x76)
+# bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+# or with other sensor address
+bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, address=0x76)
 
 # OR create library object using our Bus SPI port
 #spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
