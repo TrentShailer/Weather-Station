@@ -1,7 +1,7 @@
 import board
 import busio
 import time
-import APDS9930
+import APDS9930_lib
 
 i2c = busio.I2C(board.SCL, board.SDA)
 
