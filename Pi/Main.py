@@ -21,7 +21,11 @@ veml6075 = adafruit_veml6075.VEML6075(i2c, integration_time=100)
 bme280.sea_level_pressure = 1013.25
 
 while True:
-    totalTemp, totalHumidity, totalPressure, totalUV_Index, totalRain = 0
+    totalTemp = 0
+    totalHumidity = 0
+    totalPressure = 0
+    totalUV_Index = 0
+    totalRain = 0
     for i in range(0, 5):
         totalTemp += bme280.temperature
         totalHumidity += bme280.relative_humidity
