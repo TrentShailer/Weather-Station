@@ -27,6 +27,7 @@ while True:
     totalUV_Index = 0
     totalRain = 0
     for i in range(0, 5):
+        time.sleep(60)
         print("\n\nTemperature: ", round(bme280.temperature, 1), "°C")
         print("Humidity: ", round(bme280.relative_humidity, 1), "%")
         print("Pressure: ", round(bme280.pressure, 1), "hpa")
@@ -37,7 +38,6 @@ while True:
         totalPressure += bme280.pressure
         totalUV_Index += veml6075.uv_index
         totalRain += 1 - io.input(water_sensor)
-        time.sleep(60)
 
     avgTemp = round(totalTemp / 5, 1)
     avgHumidity = round(totalHumidity / 5, 1)
