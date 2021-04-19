@@ -27,11 +27,11 @@ while True:
     totalUV_Index = 0
     totalRain = 0
     for i in range(0, 5):
-        print("Temperature: ", round(bme280.temperature, 1), "°C")
+        print("\n\nTemperature: ", round(bme280.temperature, 1), "°C")
         print("Humidity: ", round(bme280.relative_humidity, 1), "%")
-        print("Pressure: ", round(bme280.pressure, 1), " hpa")
+        print("Pressure: ", round(bme280.pressure, 1), "hpa")
         print("UV Index: ", round(veml6075.uv_index, 1))
-        print("Rain: ", 1 - io.input(water_sensor), " min")
+        print("Rain: ", 1 - io.input(water_sensor), "min")
         totalTemp += bme280.temperature
         totalHumidity += bme280.relative_humidity
         totalPressure += bme280.pressure
@@ -44,11 +44,11 @@ while True:
     avgPressure = round(totalPressure / 5, 1)
     avgUV_Index = round(totalUV_Index / 5, 1)
 
-    print("Average Temperature: ", avgTemp, "°C")
+    print("\n\nAverage Temperature: ", avgTemp, "°C")
     print("Average Humidity: ", avgHumidity, "%")
-    print("Average Pressure: ", avgPressure, " hpa")
+    print("Average Pressure: ", avgPressure, "hpa")
     print("Average UV Index: ", avgUV_Index)
-    print("Rain: ", totalRain, " min(s)")
+    print("Rain: ", totalRain, "min(s)")
 
     requests.post("http://192.168.9.101:3002/SaveData",
                   data={'secret': secret(), 'temperature': avgTemp, 'humidity': avgHumidity, 'pressure': avgPressure, 'uv': avgUV_Index, 'rain': totalRain, 'wind': 0})
