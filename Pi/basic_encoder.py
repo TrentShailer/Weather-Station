@@ -32,7 +32,7 @@ def B():
 
 while True:
     position = 0
-    for i in 10000:
+    for i in range(0, 10000):
         if prev_A != io.input(a_phase):
             A()
         if prev_B != io.input(b_phase):
