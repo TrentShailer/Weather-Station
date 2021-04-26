@@ -7,15 +7,30 @@ io.setmode(io.BCM)
 io.setup(a_phase, io.IN)
 io.setup(b_phase, io.IN)
 
-while True:
-    a_val = 1
-    ticks = 0
-    millis = int(round(time.time() * 1000))
-    for i in range(0, 2000):
-        if a_val != io.input(a_phase):
-            ticks += 1
-        a_val = io.input(a_phase)
-        time.sleep(0.001)
+prev_A = 0
+prev_B = 0
+position = 0
 
-    print("Time:", int(round(time.time() * 1000)) - millis)
-    print(ticks, "ticks per 2 seconds")
+
+def A():
+    if prev_A == io.input(a_phase):
+        position += 1
+
+    prev_A = io.input(a_phase)
+
+
+def B():
+    if prev_B == io.input(b_phase):
+        position += 1
+
+    prev_B = io.input(b_phase)
+
+
+while True:
+    if prev_A != io.input(a_phase):
+        A()
+    if prev_B != io.input(b_phase):
+        B()
+
+    print(position * 0.3)
+    time.sleep(0.001)
