@@ -11,4 +11,4 @@ while True:
     print(io.input(a_phase))
     print(io.input(b_phase))
     print("\n")
-    time.sleep_ms(20)
+    time.sleep(0.020)
