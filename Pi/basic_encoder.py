@@ -31,9 +31,14 @@ def B():
 
 
 while True:
-    if prev_A != io.input(a_phase):
-        A()
-    if prev_B != io.input(b_phase):
-        B()
-    print(round(position * 0.3, 0))
-    time.sleep(0.0001)
+    global position
+    position = 0
+    for i in 10000:
+        if prev_A != io.input(a_phase):
+            A()
+        if prev_B != io.input(b_phase):
+            B()
+
+        time.sleep(0.1 / 1000)
+
+    print("Position Change:", round(position * 0.3, 0), "per second")
