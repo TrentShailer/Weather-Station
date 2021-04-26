@@ -35,3 +35,4 @@ io.add_event_detect(b_phase, io.BOTH, callback=B)
 
 while True:
     print("Position:", round(position * 0.3, 0))
+    time.sleep(0.1)
