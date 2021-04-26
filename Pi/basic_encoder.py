@@ -9,4 +9,4 @@ io.setup(b_phase, io.IN)
 
 while True:
     print(io.input(a_phase), "", io.input(b_phase))
-    time.sleep(0.050)
+    time.sleep(0.250)
