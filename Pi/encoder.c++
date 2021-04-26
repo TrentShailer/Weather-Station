@@ -7,8 +7,8 @@ int stateA=0;
 int stateB=0;
 float angle=0;
  
-int wireA=28; //BCM 17
-int wireB=29; //BCM 27
+int wireA=28;
+int wireB=29;
  
  
 void A()
@@ -34,8 +34,6 @@ void B()
  
 int main()
 {
-	
-	
 	wiringPiSetup();
 	
 	wiringPiISR(wireA, INT_EDGE_BOTH,&A);
@@ -43,8 +41,8 @@ int main()
 	
 	while(1)
 	{
-		angle=encoder*0.3;
-		cout<<"Angle is:"<<angle<<endl;
+		angle=encoder * 0.3;
+		//cout << "Angle is:" << angle <<endl;
 	}
  
 }
