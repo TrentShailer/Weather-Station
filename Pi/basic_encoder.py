@@ -31,7 +31,6 @@ def B():
 
 
 while True:
-    global position
     position = 0
     for i in 10000:
         if prev_A != io.input(a_phase):
