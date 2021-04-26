@@ -31,11 +31,11 @@ def B():
 
 
 while True:
-    start = time.time()
+    start = time.time_ns()
     if prev_A != io.input(a_phase):
         A()
     if prev_B != io.input(b_phase):
         B()
-    print("Elapsed: %.20f" % time.time() - start)
+    print("Elapsed:" (time.time_ns() - start))
     print(round(position * 0.3, 1))
     time.sleep(0.0001)
