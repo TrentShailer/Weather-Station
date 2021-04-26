@@ -30,14 +30,8 @@ def B():
     prev_B = io.input(b_phase)
 
 
+io.add_event_detect(a_phase, io.BOTH, callback=A)
+io.add_event_detect(b_phase, io.BOTH, callback=B)
+
 while True:
-    position = 0
-    for i in range(0, 10000):
-        if prev_A != io.input(a_phase):
-            A()
-        if prev_B != io.input(b_phase):
-            B()
-
-        time.sleep(0.1 / 1000)
-
-    print("Position Change:", round(position * 0.3, 0), "per second")
+    print("Position:", round(position * 0.3, 0))
