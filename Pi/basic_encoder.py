@@ -34,5 +34,6 @@ io.add_event_detect(a_phase, io.BOTH, callback=A)
 io.add_event_detect(b_phase, io.BOTH, callback=B)
 
 while True:
-    print("Position:", round(position * 0.3, 0))
-    time.sleep(0.1)
+    position = 0
+    time.sleep(1)
+    print("RPM:", round((position * 0.3) / 360, 1))
