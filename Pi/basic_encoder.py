@@ -15,7 +15,7 @@ position = 0
 def A():
     global prev_A
     global position
-    if prev_A == io.input(a_phase):
+    if prev_A == prev_B:
         position += 1
 
     prev_A = io.input(a_phase)
@@ -24,8 +24,8 @@ def A():
 def B():
     global prev_B
     global position
-    if prev_B == io.input(b_phase):
-        position += 1
+    if prev_B == prev_A:
+        position -= 1
 
     prev_B = io.input(b_phase)
 
