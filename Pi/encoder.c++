@@ -7,8 +7,8 @@ int stateA=0;
 int stateB=0;
 float angle=0;
  
-int wireA=0; //BCM 17
-int wireB=2; //BCM 27
+int wireA=28; //BCM 17
+int wireB=29; //BCM 27
  
  
 void A()
