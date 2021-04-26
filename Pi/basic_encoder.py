@@ -12,7 +12,7 @@ prev_B = 0
 position = 0
 
 
-def A():
+def A(channel):
     global prev_A
     global position
     if prev_A == prev_B:
@@ -21,7 +21,7 @@ def A():
     prev_A = io.input(a_phase)
 
 
-def B():
+def B(channel):
     global prev_B
     global position
     if prev_B == prev_A:
