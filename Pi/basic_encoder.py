@@ -17,5 +17,5 @@ while True:
         a_val = io.input(a_phase)
         time.sleep(0.001)
 
-    print("Time:", millis - int(round(time.time() * 1000)))
+    print("Time:", int(round(time.time() * 1000)) - millis)
     print(ticks, "ticks per second")
