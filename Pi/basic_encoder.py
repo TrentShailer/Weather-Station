@@ -36,6 +36,6 @@ while True:
         A()
     if prev_B != io.input(b_phase):
         B()
-    print("Elapsed:", round(time.time() - start, 9))
+    print("Elapsed: %.1f" % time.time() - start, 9)
     print(round(position * 0.3, 1))
     time.sleep(0.0001)
