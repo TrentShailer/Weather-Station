@@ -8,7 +8,5 @@ io.setup(a_phase, io.IN)
 io.setup(b_phase, io.IN)
 
 while True:
-    print(io.input(a_phase))
-    print(io.input(b_phase))
-    print("\n")
-    time.sleep(0.020)
+    print(io.input(a_phase), "", io.input(b_phase))
+    time.sleep(0.050)
