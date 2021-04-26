@@ -11,11 +11,11 @@ while True:
     a_val = 1
     ticks = 0
     millis = int(round(time.time() * 1000))
-    for i in range(0, 1000):
+    for i in range(0, 2000):
         if a_val != io.input(a_phase):
             ticks += 1
         a_val = io.input(a_phase)
         time.sleep(0.001)
 
     print("Time:", int(round(time.time() * 1000)) - millis)
-    print(ticks, "ticks per second")
+    print(ticks, "ticks per 2 seconds")
