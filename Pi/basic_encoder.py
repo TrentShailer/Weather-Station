@@ -31,10 +31,11 @@ def B():
 
 
 while True:
+    start = time.time()
     if prev_A != io.input(a_phase):
         A()
     if prev_B != io.input(b_phase):
         B()
-
-    print(position * 0.3)
-    time.sleep(0.001)
+    print("Elapsed:", round(time.time() - start, 9))
+    print(round(position * 0.3, 1))
+    time.sleep(0.0001)
