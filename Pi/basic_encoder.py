@@ -35,5 +35,5 @@ while True:
         A()
     if prev_B != io.input(b_phase):
         B()
-    print(round(position * 0.3, 1))
+    print(round(position * 0.3, 0))
     time.sleep(0.0001)
