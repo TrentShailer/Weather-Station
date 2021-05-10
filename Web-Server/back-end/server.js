@@ -4,13 +4,15 @@ var fs = require("fs");
 const fsA = fs.promises;
 var path = require("path");
 var dateFormat = require("dateformat");
-// var https = require("https");
 var http = require("http");
-// var privateKey = fs.readFileSync("", "utf8");
-// var certificate = fs.readFileSync("", "utf8");
 
-// var credentials = { key: privateKey, cert: certificate };
+if (process.argv[2] !== "nohttps") {
+	var https = require("https");
+	var privateKey = fs.readFileSync("", "utf8");
+	var certificate = fs.readFileSync("", "utf8");
 
+	var credentials = { key: privateKey, cert: certificate };
+}
 var bodyParser = require("body-parser");
 var urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
@@ -19,7 +21,9 @@ var express = require("express");
 var app = express();
 
 var httpServer = http.createServer(app);
-// var httpsServer = https.createServer(credentials, app);
+if (process.argv[2] !== "nohttps") {
+	var httpsServer = https.createServer(credentials, app);
+}
 
 app.use(express.static(path.join(__dirname, "/build")));
 
@@ -52,6 +56,16 @@ app.post("/GetData", async (req, res) => {
 function GetWeather(rain, pressure, uv, now) {
 	// Low pressure indicates bad weather (cloud and rain)
 	// High pressure indicates clear skies
+
+	// Will need to do tests to find what air pressure ranges are viable
+	// Then
+	// Low end = Cloudy
+	// Low-mid end = Mostly Cloudy
+	// mid = Light Cloud
+	// Mid-high+ = Clear
+
+	// Rain = Rain
+
 	return "";
 }
 
@@ -453,5 +467,8 @@ app.get("*", (req, res) => {
 	res.redirect("/");
 });
 
-//httpsServer.listen(3001);
-httpServer.listen(3002);
+if (process.argv[2] !== "nohttps") {
+	httpsServer.listen(3002);
+}
+
+httpServer.listen(2002);

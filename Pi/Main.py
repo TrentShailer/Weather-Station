@@ -50,5 +50,5 @@ while True:
     print("Average UV Index: ", avgUV_Index)
     print("Rain: ", totalRain, "min(s)")
 
-    requests.post("http://192.168.9.101:3002/SaveData",
+    requests.post("https://192.168.9.158:3002/SaveData",
                   data={'secret': secret(), 'temperature': avgTemp, 'humidity': avgHumidity, 'pressure': avgPressure, 'uv': avgUV_Index, 'rain': totalRain, 'wind': 0})
