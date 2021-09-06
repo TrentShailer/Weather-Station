@@ -32,7 +32,7 @@ while True:
         print("Humidity: ", round(bme280.relative_humidity, 1), "%")
         print("Pressure: ", round(bme280.pressure, 1), "hpa")
         print("UV Index: ", round(veml6075.uv_index, 1))
-        print("Rain: ", 1 - io.input(water_sensor), "min")
+        print("Rain: ", 1 - io.input(water_sensor), "ml")
         totalTemp += bme280.temperature
         totalHumidity += bme280.relative_humidity
         totalPressure += bme280.pressure

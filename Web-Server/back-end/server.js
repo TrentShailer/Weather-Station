@@ -13,8 +13,9 @@ if (process.argv[2] !== "nohttps") {
 
 	var credentials = { key: privateKey, cert: certificate };
 }
-var bodyParser = require("body-parser");
-var urlEncodedParser = bodyParser.urlencoded({ extended: true });
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Initialise libraries
 var express = require("express");
@@ -37,7 +38,12 @@ app.post("/GetData", async (req, res) => {
 	var now = new Date();
 	try {
 		var data = await fsA.readFile(
-			path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json")
+			path.join(
+				__dirname,
+				"/data",
+				dateFormat(now, "yyyy-mm-dd"),
+				"CurrentData.json"
+			)
 		);
 	} catch (err) {
 		var data = await fsA.readFile(
@@ -54,18 +60,6 @@ app.post("/GetData", async (req, res) => {
 });
 
 function GetWeather(rain, pressure, uv, now) {
-	// Low pressure indicates bad weather (cloud and rain)
-	// High pressure indicates clear skies
-
-	// Will need to do tests to find what air pressure ranges are viable
-	// Then
-	// Low end = Cloudy
-	// Low-mid end = Mostly Cloudy
-	// mid = Light Cloud
-	// Mid-high+ = Clear
-
-	// Rain = Rain
-
 	return "";
 }
 
@@ -83,14 +77,24 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 
 		var exists = true;
 		try {
-			await fsA.stat(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
+			await fsA.stat(
+				path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"))
+			);
 		} catch (err) {
 			exists = false;
 		}
 
-		if (!exists) await fsA.mkdir(path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd")));
+		if (!exists)
+			await fsA.mkdir(
+				path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"))
+			);
 		await fsA.writeFile(
-			path.join(__dirname, "/data", dateFormat(now, "yyyy-mm-dd"), "CurrentData.json"),
+			path.join(
+				__dirname,
+				"/data",
+				dateFormat(now, "yyyy-mm-dd"),
+				"CurrentData.json"
+			),
 			JSON.stringify({
 				date: dateFormat(now, "yyyy-mm-dd h:MM TT"),
 				data: {
@@ -124,10 +128,14 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 		);
 
 		var exists = true;
-
 		try {
 			await fsA.stat(
-				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json")
+				path.join(
+					__dirname,
+					"/data/",
+					dateFormat(now, "yyyy-mm-dd"),
+					"ImportantValues.json"
+				)
 			);
 		} catch (err) {
 			exists = false;
@@ -135,41 +143,68 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 
 		if (exists) {
 			var importantData = await fsA.readFile(
-				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json")
+				path.join(
+					__dirname,
+					"/data/",
+					dateFormat(now, "yyyy-mm-dd"),
+					"ImportantValues.json"
+				)
 			);
 			var objData = JSON.parse(importantData);
 			// update peaks and troughs
-			if (objData.peak.temperature < temperature) objData.peak.temperature = temperature;
-			if (objData.peak.humidity < humidity) objData.peak.humidity = humidity;
+			if (objData.peak.temperature < temperature)
+				objData.peak.temperature = temperature;
+			if (objData.peak.humidity < humidity)
+				objData.peak.humidity = humidity;
 			if (objData.peak.wind < wind) objData.peak.wind = wind;
 			if (objData.peak.uv < uv) objData.peak.uv = uv;
-			if (objData.peak.pressure < pressure) objData.peak.pressure = pressure;
+			if (objData.peak.pressure < pressure)
+				objData.peak.pressure = pressure;
 
-			if (objData.trough.temperature > temperature) objData.trough.temperature = temperature;
-			if (objData.trough.humidity > humidity) objData.trough.humidity = humidity;
+			if (objData.trough.temperature > temperature)
+				objData.trough.temperature = temperature;
+			if (objData.trough.humidity > humidity)
+				objData.trough.humidity = humidity;
 			if (objData.trough.wind > wind) objData.trough.wind = wind;
 			if (objData.trough.uv > uv) objData.trough.uv = uv;
-			if (objData.trough.pressure > pressure) objData.trough.pressure = pressure;
+			if (objData.trough.pressure > pressure)
+				objData.trough.pressure = pressure;
 
 			objData.values++;
 			objData.extra.rain += rain;
 
 			// Update average
 			objData.average.temperature =
-				objData.average.temperature + (temperature - objData.average.temperature) / objData.values;
+				objData.average.temperature +
+				(temperature - objData.average.temperature) / objData.values;
 			objData.average.humidity =
-				objData.average.humidity + (humidity - objData.average.humidity) / objData.values;
-			objData.average.wind = objData.average.wind + (wind - objData.average.wind) / objData.values;
-			objData.average.uv = objData.average.uv + (uv - objData.average.uv) / objData.values;
+				objData.average.humidity +
+				(humidity - objData.average.humidity) / objData.values;
+			objData.average.wind =
+				objData.average.wind +
+				(wind - objData.average.wind) / objData.values;
+			objData.average.uv =
+				objData.average.uv + (uv - objData.average.uv) / objData.values;
 			objData.average.pressure =
-				objData.average.pressure + (pressure - objData.average.pressure) / objData.values;
+				objData.average.pressure +
+				(pressure - objData.average.pressure) / objData.values;
 			await fsA.writeFile(
-				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json"),
+				path.join(
+					__dirname,
+					"/data/",
+					dateFormat(now, "yyyy-mm-dd"),
+					"ImportantValues.json"
+				),
 				JSON.stringify(objData)
 			);
 		} else {
 			await fsA.writeFile(
-				path.join(__dirname, "/data/", dateFormat(now, "yyyy-mm-dd"), "ImportantValues.json"),
+				path.join(
+					__dirname,
+					"/data/",
+					dateFormat(now, "yyyy-mm-dd"),
+					"ImportantValues.json"
+				),
 				JSON.stringify({
 					values: 1,
 					average: {
@@ -205,12 +240,11 @@ app.post("/SaveData", urlEncodedParser, async (req, res) => {
 		res.sendStatus(403);
 	}
 });
-
 app.post("/GetWeather", async (req, res) => {
 	var now = new Date();
 	var ittrDate = new Date();
 	ittrDate.setFullYear(ittrDate.getFullYear() - 1);
-	var data = [{ id: "Hours of Rain", data: [] }];
+	var data = [{ id: "mm of Rain", data: [] }];
 	for (var i = 0; i < 365; i++) {
 		var exists = true;
 		var dir = path.join(
@@ -227,7 +261,10 @@ app.post("/GetWeather", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({
@@ -264,7 +301,10 @@ app.post("/GetTemperature", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({
@@ -309,7 +349,10 @@ app.post("/GetHumidity", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({
@@ -354,7 +397,10 @@ app.post("/GetWind%20Speed", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({
@@ -399,7 +445,10 @@ app.post("/GetUV%20Index", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({
@@ -443,7 +492,10 @@ app.post("/GetAir%20Pressure", async (req, res) => {
 			continue;
 		}
 
-		if (dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")) break;
+		if (
+			dateFormat(ittrDate, "yyyy-mm-dd") === dateFormat(now, "yyyy-mm-dd")
+		)
+			break;
 		var text = await fsA.readFile(dir);
 		var objData = JSON.parse(text);
 		data[0].data.push({

@@ -35,6 +35,7 @@ class StatCard extends React.Component {
 									{this.props.value}
 								</Typography>
 							</Grid>
+
 							<Grid item>
 								<Typography color="textSecondary" variant="h5" gutterBottom>
 									{this.props.unit}
